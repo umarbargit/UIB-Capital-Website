@@ -1,7 +1,7 @@
 {
   "name": "UIB Capital",
   "headline": "Long term. In the open.",
-  "intro": "Stocks and crypto, updated every night.",
+  "intro": "Stocks, crypto and the odd angel deal. Updated every night.",
   "startDate": "2026-11-24",
   "weights": {
     "stocks": 70,
@@ -11,8 +11,9 @@
   "benchmarkName": "S&P 500 (SPY)",
   "newPositionDelayDays": 7,
   "about": [
-    "I'm Umar. I work in my family's business during the day and spend most of my spare time reading annual reports, earnings calls and anything else that helps me understand where money is moving next.",
-    "UIB Capital is where I put that work to the test, with my own money. I started publishing it because a track record only counts if it's written down before you know how things turn out."
+    "I got properly into investing during Covid, like a lot of people, and never really stopped. Crypto came a bit later, in my last couple of years at uni, and once I graduated I went back to stocks with a lot more reading behind me.",
+    "These days I work in denim, but most of my spare time goes on annual reports, earnings calls and anything else that helps me find the next good idea.",
+    "A few of those ideas started working, so I wanted a public track record, one I can't edit after the fact. The writing is there to document what I'm thinking at the time, so anyone following along can hopefully take something from it, including from the calls that don't work out."
   ],
   "principles": [
     {
