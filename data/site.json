@@ -37,10 +37,11 @@
     }
   ],
   "scope": "The portfolio is measured as 70% stocks and 30% crypto. Stocks come straight from Interactive Brokers every night after the US market closes. Crypto (Ethereum and Solana) is valued from daily market prices. Only percentages are shown, never amounts. Index funds and cash reserves held elsewhere aren't included.",
-  "contact": "",
+  "contact": "umar.bargit@newstar-group.co.uk",
   "newsletter": {
     "provider": "buttondown",
     "username": ""
   },
-  "disclaimer": "UIB Capital is a personal portfolio. Nothing here is investment advice, a recommendation or an offer to manage money. Figures are percentages taken from broker data and market prices, and past results don't predict future ones."
+  "disclaimer": "UIB Capital is a personal portfolio. Nothing here is investment advice, a recommendation or an offer to manage money. Figures are percentages taken from broker data and market prices, and past results don't predict future ones.",
+  "linkedin": "https://www.linkedin.com/in/umarbargit/"
 }

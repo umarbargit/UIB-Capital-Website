@@ -183,6 +183,9 @@ content:
       - name: contact
         label: Contact email (optional)
         type: string
+      - name: linkedin
+        label: LinkedIn link (optional)
+        type: string
       - name: newsletter
         label: Email newsletter
         type: object

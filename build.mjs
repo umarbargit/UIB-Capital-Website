@@ -56,7 +56,7 @@ const posts = (fs.existsSync(thesesDir) ? fs.readdirSync(thesesDir) : [])
 const postFor = Object.fromEntries(posts.filter((t) => t.ticker).map((t) => [t.ticker.toUpperCase(), t]));
 
 // ------------------------------------------------------------------ layout
-const NAV = [["/#philosophy", "Philosophy"], ["/#portfolio", "Portfolio"], ["/#performance", "Performance"], ["/writing", "Writing"]];
+const NAV = [["/#philosophy", "Philosophy"], ["/#portfolio", "Portfolio"], ["/#performance", "Performance"], ["/writing", "Writing"], ["#contact", "Contact"]];
 function page({ title, desc, active, body, closing = true }) {
   const full = title ? `${title} | ${site.name}` : site.name;
   const d = desc || site.intro;
@@ -209,9 +209,15 @@ function postList(list) {
 
 function closingBlock() {
   const u = site.newsletter?.username;
-  return `<section class="closing"><h2>Curious?</h2>
-<p>New write-ups go up here first. ${site.contact ? `If you want to talk about any of it, email <a href="mailto:${esc(site.contact)}">${esc(site.contact)}</a>.` : ""}</p>
-${u ? `<form class="subscribe" action="https://buttondown.com/api/emails/embed-subscribe/${esc(u)}" method="post" target="_blank"><label class="muted" for="email" style="position:absolute;left:-9999px">Email address</label><input id="email" name="email" type="email" required placeholder="Email address" autocomplete="email"><button type="submit">Get new posts</button></form>` : ""}
+  const li = `<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>`;
+  const mail = `<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>`;
+  return `<section class="closing" id="contact"><h2>Curious?</h2>
+<p>If you want to talk about any of it, get in touch.</p>
+<div class="contact">
+${site.contact ? `<a class="btn" href="mailto:${esc(site.contact)}">${mail}<span>${esc(site.contact)}</span></a>` : ""}
+${site.linkedin ? `<a class="btn btn-ghost" href="${esc(site.linkedin)}" target="_blank" rel="noopener">${li}<span>LinkedIn</span></a>` : ""}
+</div>
+${u ? `<form class="subscribe" action="https://buttondown.com/api/emails/embed-subscribe/${esc(u)}" method="post" target="_blank"><label for="email" style="position:absolute;left:-9999px">Email address</label><input id="email" name="email" type="email" required placeholder="Email address" autocomplete="email"><button type="submit">Get new posts</button></form>` : ""}
 </section>`;
 }
 

@@ -142,3 +142,10 @@ a:hover { color: var(--accent); }
 .closing h2 { color: var(--ink); }
 .closing { background: var(--tint); box-shadow: 0 0 0 100vmax var(--tint); clip-path: inset(0 -100vmax); padding: 80px 0; margin-top: 0; }
 .site-footer { border-top: 0; }
+
+.contact { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 18px; border-radius: 8px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 500; font-size: 15px; }
+.btn:hover { color: #fff; filter: brightness(1.08); }
+.btn-ghost { background: transparent; color: var(--ink); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.btn-ghost:hover { color: var(--accent); filter: none; }
+@media (max-width: 480px) { .btn span { word-break: break-all; } }
