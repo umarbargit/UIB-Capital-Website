@@ -2,7 +2,7 @@
 title: the top is in (i was early)
 date: 2026-11-24
 type: View
-ticker: ETH, SOL
+ticker:
 summary: why i'm sitting in crypto and cash while everyone else buys the dip
 ---
 
