@@ -1,23 +1,27 @@
 ---
 title: How this portfolio works
 date: 2026-11-24
-type: View
+type: Note
 ticker:
-summary: What UIB Capital is, the rules I invest by, and how the numbers on this site are produced.
+summary: What's in it, what isn't, and how the numbers on this site are worked out.
 ---
 
-UIB Capital is my personal portfolio, published openly. This page explains the rules and how the numbers are made, so you can judge the record for yourself.
+This is my own money and I publish all of it here. Before anything else goes up, this is how it works, so you can judge the record for yourself.
 
-## The rules
+## What's in it
 
-- **Long-term, spot positions only.** No leverage, no options, no shorting.
-- **A written thesis for every new stock.** It is published before or when the position is shown on the site, and says what would prove me wrong.
-- **An exit note for every sale.** What happened, measured against the original thesis.
+Two parts. **Stocks**, held at Interactive Brokers, and **crypto**, which right now is Ethereum and Solana held in cold storage. For performance I treat the portfolio as 70% stocks and 30% crypto.
 
-## How the numbers are produced
+What isn't in it: index funds I hold elsewhere and cash reserves. They're long-term money I don't make active decisions on, so including them would only blur the record.
 
-Stock positions and performance come directly from Interactive Brokers every evening after the US market closes. The site only ever shows **percentages** — weights and returns — never amounts.
+## The rules I hold myself to
 
-Performance is **time-weighted**, which means money added to or taken out of the account does not count as a gain or a loss. It is shown after trading costs and compared with the S&P 500 (SPY).
+- Spot positions only. No leverage, no options, no shorting.
+- Every new position gets a dated write-up before it shows up on the site, saying why I own it and what would make me wrong.
+- Every exit gets a short note on what happened compared with what I expected.
 
-Crypto is updated monthly and private investments when there is news. They are shown separately because they cannot be priced as reliably as listed stocks.
+## How the numbers work
+
+Stock positions and returns come straight from Interactive Brokers every night after the US market closes. Crypto is valued from daily market prices. I only show percentages, never amounts.
+
+Performance is time-weighted, which means money I add or take out doesn't count as a gain or a loss. It's after trading costs and compared with the S&P 500 (SPY, dividends included).

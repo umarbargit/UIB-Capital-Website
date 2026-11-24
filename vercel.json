@@ -2,5 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/theses", "destination": "/writing", "permanent": true },
+    { "source": "/theses/:slug", "destination": "/writing/:slug", "permanent": true },
+    { "source": "/portfolio", "destination": "/#portfolio", "permanent": false },
+    { "source": "/about", "destination": "/#about", "permanent": false }
+  ]
 }

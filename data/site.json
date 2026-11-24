@@ -1,25 +1,46 @@
 {
   "name": "UIB Capital",
-  "tagline": "A personal portfolio, run in public.",
-  "intro": "Every position, every thesis, every result — shown as percentages and updated automatically from the broker. Public stocks, crypto and early-stage investments.",
+  "headline": "My own money, invested in the open.",
+  "intro": "Stocks and crypto, held for the long run. Every position, the reason I own it, and how it's done, updated every night straight from the account.",
   "startDate": "2026-11-24",
   "weights": {
-    "stocks": 80,
-    "crypto": 20,
+    "stocks": 70,
+    "crypto": 30,
     "angel": 0
   },
   "benchmarkName": "S&P 500 (SPY)",
   "newPositionDelayDays": 7,
   "about": [
-    "UIB Capital is my personal investment portfolio. I publish what I own, why I own it, and how it has done — the good and the bad.",
-    "The approach is long-term: spot positions only, no leverage, no options and no shorting. Every new stock position gets a written thesis, and every exit gets a short note on what happened against that thesis.",
-    "The portfolio is measured as 80% stocks and 20% crypto (Ethereum and Solana). Stock figures come straight from Interactive Brokers and update every evening after the US market closes; crypto is valued daily from market prices. Amounts are never shown — only percentages.",
-    "Long-term holdings kept elsewhere, such as passive index funds and stablecoin cash reserves, are not part of this portfolio."
+    "I'm Umar. I work in my family's business during the day and spend most of my spare time reading annual reports, earnings calls and anything else that helps me understand where money is moving next.",
+    "UIB Capital is where I put that work to the test, with my own money. I started publishing it because a track record only counts if it's written down before you know how things turn out."
   ],
+  "principles": [
+    {
+      "title": "It's my own money.",
+      "text": "No clients, no fees, nothing to sell. I don't need to look busy or explain a bad quarter to anyone, so I can be patient and wait for prices that actually make sense."
+    },
+    {
+      "title": "I write it down first.",
+      "text": "Every position starts with a dated thesis: why I own it, what I think it's worth, and what would make me wrong. I judge decisions on the reasoning, not on what the price did the following month."
+    },
+    {
+      "title": "Size follows conviction.",
+      "text": "A small number of positions I understand well, sized by how strong the case is. If I wouldn't be comfortable holding something through a 30% fall, I shouldn't own much of it."
+    },
+    {
+      "title": "Long term means long term.",
+      "text": "The crypto sits in cold storage and doesn't move unless the price does something big. Stocks are bought to be held for years, not traded around earnings."
+    },
+    {
+      "title": "Everything is public.",
+      "text": "The holdings, the returns and the bad calls. You can't pick which parts of a track record to show, so all of it is here."
+    }
+  ],
+  "scope": "The portfolio is measured as 70% stocks and 30% crypto. Stocks come straight from Interactive Brokers every night after the US market closes. Crypto (Ethereum and Solana) is valued from daily market prices. Only percentages are shown, never amounts. Index funds and cash reserves held elsewhere aren't included.",
   "contact": "",
   "newsletter": {
     "provider": "buttondown",
     "username": ""
   },
-  "disclaimer": "UIB Capital is a personal portfolio. Nothing on this site is investment advice, a recommendation, or an offer to manage money. Figures are percentages derived from broker data; past results do not predict future ones."
+  "disclaimer": "UIB Capital is a personal portfolio. Nothing here is investment advice, a recommendation or an offer to manage money. Figures are percentages taken from broker data and market prices, and past results don't predict future ones."
 }

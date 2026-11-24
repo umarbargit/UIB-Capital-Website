@@ -124,7 +124,7 @@ content:
             type: string
 
   - name: site
-    label: Site settings & About
+    label: Site text & settings
     type: file
     path: data/site.json
     format: json
@@ -132,26 +132,32 @@ content:
       - name: name
         label: Site name
         type: string
-      - name: tagline
-        label: Headline
+      - name: headline
+        label: Big headline at the top
         type: string
       - name: intro
-        label: Intro paragraph
+        label: Line under the headline
         type: text
-      - name: startDate
-        label: Track record start date
-        type: date
-        description: Days before this are ignored in performance figures.
-        options:
-          format: yyyy-MM-dd
-      - name: benchmarkName
-        label: Benchmark name
-        type: string
-      - name: newPositionDelayDays
-        label: Hide new stock positions for this many days (unless a thesis is published)
-        type: number
+      - name: about
+        label: 01 / Who I am (paragraphs)
+        type: text
+        list: true
+      - name: principles
+        label: 02 / Philosophy (numbered points)
+        type: object
+        list: true
+        fields:
+          - name: title
+            label: Short title
+            type: string
+          - name: text
+            label: Explanation
+            type: text
+      - name: scope
+        label: Note under the portfolio (what's included)
+        type: text
       - name: weights
-        label: Target weights used for combined performance (should add up to 100)
+        label: Weights used for combined performance (add up to 100)
         type: object
         fields:
           - name: stocks
@@ -161,12 +167,19 @@ content:
             label: Crypto %
             type: number
           - name: angel
-            label: Angel investments %
+            label: Angel %
             type: number
-      - name: about
-        label: About page paragraphs
-        type: text
-        list: true
+      - name: startDate
+        label: Track record start date
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: benchmarkName
+        label: Benchmark name
+        type: string
+      - name: newPositionDelayDays
+        label: Hide new stock positions for this many days (unless a thesis is out)
+        type: number
       - name: contact
         label: Contact email (optional)
         type: string
@@ -178,7 +191,7 @@ content:
             label: Provider
             type: string
           - name: username
-            label: Buttondown username (leave blank to hide the sign-up box)
+            label: Buttondown username (blank hides the sign-up box)
             type: string
       - name: disclaimer
         label: Footer disclaimer
