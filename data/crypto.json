@@ -1,0 +1,10 @@
+{
+  "sample": true,
+  "asOf": "2026-11-01",
+  "note": "Edit this file by hand once a month. weight = % of the crypto portfolio; returnPct = % gain or loss since bought.",
+  "holdings": [
+    { "symbol": "SAMPLE-A", "name": "Sample coin A", "weight": 55, "returnPct": 42.0 },
+    { "symbol": "SAMPLE-B", "name": "Sample coin B", "weight": 30, "returnPct": -12.5 },
+    { "symbol": "SAMPLE-C", "name": "Sample coin C", "weight": 15, "returnPct": 8.0 }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "sample": true,
+  "positions": [
+    {
+      "symbol": "SAMPLE6",
+      "name": "Sample closed position",
+      "opened": "2026-02-03",
+      "closed": "2026-08-14",
+      "returnPct": 17.5
+    },
+    {
+      "symbol": "SAMPLE7",
+      "name": "Sample closed position",
+      "opened": "2026-04-22",
+      "closed": "2026-09-30",
+      "returnPct": -9.1
+    }
+  ]
+}

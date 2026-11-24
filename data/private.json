@@ -1,0 +1,8 @@
+{
+  "sample": true,
+  "note": "Edit by hand when there is news. No market price, so no live return. 'markup' is optional, e.g. \"1.8x at last round\".",
+  "investments": [
+    { "company": "Sample Company One", "sector": "Software", "round": "Seed", "year": 2025, "note": "One line on why I invested.", "markup": "" },
+    { "company": "Sample Company Two", "sector": "Consumer", "round": "Pre-seed", "year": 2026, "note": "One line on why I invested.", "markup": "" }
+  ]
+}

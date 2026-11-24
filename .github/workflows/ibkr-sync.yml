@@ -1,0 +1,43 @@
+name: Nightly IBKR sync
+
+# Runs every weekday evening after the US market closes (22:30 UTC),
+# and can also be started by hand from the GitHub "Actions" tab.
+on:
+  schedule:
+    - cron: "30 22 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ibkr-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download from IBKR and update the percentage files
+        env:
+          IBKR_FLEX_TOKEN: ${{ secrets.IBKR_FLEX_TOKEN }}
+          IBKR_FLEX_QUERY: ${{ secrets.IBKR_FLEX_QUERY }}
+        run: python scripts/ibkr_sync.py
+
+      - name: Save the updated files (this also redeploys the site)
+        run: |
+          git config user.name "uib-capital-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/stocks.json data/performance.json data/closed.json
+          if git diff --cached --quiet; then
+            echo "Nothing changed today."
+          else
+            git commit -m "Portfolio sync $(date -u +%Y-%m-%d)"
+            git push
+          fi

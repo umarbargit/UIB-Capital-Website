@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.DS_Store
+# Raw broker downloads must never be committed — they contain money amounts.
+*.xml
+.env
+__pycache__/

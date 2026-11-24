@@ -1,0 +1,44 @@
+{
+  "sample": true,
+  "asOf": "2026-11-20",
+  "source": "Sample data",
+  "positions": [
+    {
+      "symbol": "SAMPLE1",
+      "name": "Sample holding one",
+      "weight": 18.4,
+      "returnPct": 24.6,
+      "firstBought": "2026-01-05"
+    },
+    {
+      "symbol": "SAMPLE2",
+      "name": "Sample holding two",
+      "weight": 15.1,
+      "returnPct": 11.2,
+      "firstBought": "2026-02-10"
+    },
+    {
+      "symbol": "SAMPLE3",
+      "name": "Sample holding three",
+      "weight": 12.7,
+      "returnPct": -6.3,
+      "firstBought": "2026-03-18"
+    },
+    {
+      "symbol": "SAMPLE4",
+      "name": "Sample holding four",
+      "weight": 10.9,
+      "returnPct": 31.8,
+      "firstBought": "2026-01-05"
+    },
+    {
+      "symbol": "SAMPLE5",
+      "name": "Sample holding five",
+      "weight": 8.2,
+      "returnPct": 3.4,
+      "firstBought": "2026-06-02"
+    }
+  ],
+  "undisclosedNewWeight": 0,
+  "cashWeight": 34.7
+}
