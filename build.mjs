@@ -69,11 +69,11 @@ function page({ title, desc, active, body, closing = true }) {
 <meta name="description" content="${esc(d)}">
 <meta property="og:title" content="${esc(full)}">
 <meta property="og:description" content="${esc(d)}">
-<meta name="theme-color" content="#EAF6FF">
+<meta name="theme-color" content="#469DDD">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
