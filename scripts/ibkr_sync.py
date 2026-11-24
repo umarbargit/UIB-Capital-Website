@@ -347,6 +347,10 @@ def write_outputs(nav, flows, positions, first_buy, as_of, site):
     series = chain_index(nav, flows, prev_perf.get("series", []))
     start = date.fromisoformat(series[0]["date"]) if series else as_of
     series = add_benchmark(series, fetch_benchmark(start))
+    if series and series[0].get("port"):  # the track record always starts at exactly 100
+        b0 = series[0]["port"]
+        for p in series:
+            p["port"] = round(100 * p["port"] / b0, 4)
 
     total = nav.get(max(nav)) if nav else sum(p["value"] for p in positions)
     prev_first = {p["symbol"]: p.get("firstBought") for p in prev_stocks.get("positions", [])}
