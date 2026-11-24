@@ -52,7 +52,7 @@ two of the worst years in american history. tariffs. insider trading on literall
 
 thankfully it's coming to an end.
 
-voters aren't stupid.
+luckily not all voters are braindead.
 
 a democrat congress has a lot less appetite for building data centres at any cost. permits, power, subsidies. all harder from here.
 
