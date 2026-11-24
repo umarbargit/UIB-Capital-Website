@@ -1,10 +1,8 @@
 {
-  "sample": true,
-  "asOf": "2026-11-01",
-  "note": "Edit this file by hand once a month. weight = % of the crypto portfolio; returnPct = % gain or loss since bought.",
+  "sample": false,
+  "asOf": "2026-11-24",
   "holdings": [
-    { "symbol": "SAMPLE-A", "name": "Sample coin A", "weight": 55, "returnPct": 42.0 },
-    { "symbol": "SAMPLE-B", "name": "Sample coin B", "weight": 30, "returnPct": -12.5 },
-    { "symbol": "SAMPLE-C", "name": "Sample coin C", "weight": 15, "returnPct": 8.0 }
+    { "symbol": "ETH", "name": "Ethereum", "yahoo": "ETH-USD", "weight": 57.1, "avgCost": null, "returnPct": null },
+    { "symbol": "SOL", "name": "Solana", "yahoo": "SOL-USD", "weight": 42.9, "avgCost": null, "returnPct": null }
   ]
 }

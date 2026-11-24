@@ -3,17 +3,18 @@
   "tagline": "A personal portfolio, run in public.",
   "intro": "Every position, every thesis, every result — shown as percentages and updated automatically from the broker. Public stocks, crypto and early-stage investments.",
   "startDate": "2026-11-23",
+  "weights": {
+    "stocks": 80,
+    "crypto": 20,
+    "angel": 0
+  },
   "benchmarkName": "S&P 500 (SPY)",
   "newPositionDelayDays": 7,
-  "allocation": [
-    { "label": "Public stocks", "pct": 75 },
-    { "label": "Crypto", "pct": 15 },
-    { "label": "Private & angel", "pct": 10 }
-  ],
   "about": [
     "UIB Capital is my personal investment portfolio. I publish what I own, why I own it, and how it has done — the good and the bad.",
     "The approach is long-term: spot positions only, no leverage, no options and no shorting. Every new stock position gets a written thesis, and every exit gets a short note on what happened against that thesis.",
-    "Stock figures come straight from my broker, Interactive Brokers, and update every evening after the US market closes. Crypto is updated monthly and private investments when there is news. Amounts are never shown — only percentages."
+    "The portfolio is measured as 80% stocks and 20% crypto (Ethereum and Solana). Stock figures come straight from Interactive Brokers and update every evening after the US market closes; crypto is valued daily from market prices. Amounts are never shown — only percentages.",
+    "Long-term holdings kept elsewhere, such as passive index funds and stablecoin cash reserves, are not part of this portfolio."
   ],
   "contact": "",
   "newsletter": {

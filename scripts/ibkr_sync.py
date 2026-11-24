@@ -177,30 +177,45 @@ def parse_flex(xml_text):
 
 
 # ---------------------------------------------------------------- benchmark
-def fetch_benchmark(start):
-    """Daily SPY closes (dividend-adjusted where available). Returns {date: close}."""
+def fetch_prices(yahoo, start, stooq=None):
+    """Daily closes from Yahoo Finance (dividend-adjusted where available), Stooq as a fallback. {date: close}"""
     out = {}
     try:
         p1 = int(datetime.combine(start - timedelta(days=10), datetime.min.time()).timestamp())
-        body = http_get(f"https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1={p1}&period2={int(time.time())}&interval=1d", timeout=60)
+        body = http_get(f"https://query1.finance.yahoo.com/v8/finance/chart/{urllib.parse.quote(yahoo)}?period1={p1}&period2={int(time.time())}&interval=1d", timeout=60)
         res = json.loads(body)["chart"]["result"][0]
         closes = (res["indicators"].get("adjclose") or [{}])[0].get("adjclose") or res["indicators"]["quote"][0]["close"]
         for ts, c in zip(res["timestamp"], closes):
             if c:
                 out[datetime.utcfromtimestamp(ts).date()] = float(c)
     except Exception as e:
-        print("Benchmark (Yahoo) failed:", e)
-    if not out:
+        print(f"Prices for {yahoo} (Yahoo) failed:", e)
+    if not out and stooq:
         try:
-            body = http_get("https://stooq.com/q/d/l/?s=spy.us&i=d", timeout=60)
+            body = http_get(f"https://stooq.com/q/d/l/?s={stooq}&i=d", timeout=60)
             for row in csv.DictReader(io.StringIO(body)):
                 d = pdate(row.get("Date"))
                 if d and d >= start - timedelta(days=10):
                     out[d] = num(row.get("Close"))
         except Exception as e:
-            print("Benchmark (Stooq) failed:", e)
-    print(f"Benchmark: {len(out)} daily prices.")
+            print(f"Prices for {yahoo} (Stooq) failed:", e)
+    print(f"Prices {yahoo}: {len(out)} days.")
     return out
+
+
+def fetch_benchmark(start):
+    return fetch_prices("SPY", start, "spy.us")
+
+
+def close_on(closes, d):
+    """Last known close on or before day d."""
+    best = None
+    for x in sorted(closes):
+        if x <= d:
+            best = x
+        else:
+            break
+    return closes[best] if best else None
 
 
 def diagnose(xml_text):
@@ -248,11 +263,11 @@ def chain_index(nav, flows, prev_series):
     prev = {p["date"]: p for p in prev_series}
     start = days[0].isoformat()
     kept = [p for p in prev_series if p["date"] < start]
-    level = prev[start]["port"] if start in prev else (kept[-1]["port"] if kept else 100.0)
-    series = kept + [{"date": start, "port": round(level, 4)}]
+    level = prev[start].get("stocks", 100.0) if start in prev else (kept[-1].get("stocks", 100.0) if kept else 100.0)
+    series = kept + [{"date": start, "stocks": round(level, 4)}]
     for d in days[1:]:
         level *= 1 + rets.get(d, 0.0)
-        series.append({"date": d.isoformat(), "port": round(level, 4)})
+        series.append({"date": d.isoformat(), "stocks": round(level, 4)})
     # carry previous benchmark values across for now; filled properly below
     for p in series:
         if p["date"] in prev and "bench" in prev[p["date"]]:
@@ -281,6 +296,70 @@ def add_benchmark(series, closes):
         c = close_on(date.fromisoformat(p["date"]))
         if c:
             p["bench"] = round(100 * c / base, 4)
+    return series
+
+
+def add_crypto(series, crypto, start, as_of):
+    """Crypto sleeve: buy-and-hold basket of the coins in data/crypto.json at their stated weights.
+    Also refreshes each coin's return in crypto.json."""
+    hold = [h for h in crypto.get("holdings", []) if h.get("yahoo")]
+    tot = sum(float(h.get("weight") or 0) for h in hold)
+    if not hold or not tot or not series:
+        return series
+    d0 = date.fromisoformat(series[0]["date"])
+    prices = {h["yahoo"]: fetch_prices(h["yahoo"], d0) for h in hold}
+    base = {k: close_on(v, d0) for k, v in prices.items()}
+    for p in series:
+        d = date.fromisoformat(p["date"])
+        val, ok = 0.0, True
+        for h in hold:
+            c, b = close_on(prices[h["yahoo"]], d), base[h["yahoo"]]
+            if not c or not b:
+                ok = False
+                break
+            val += float(h["weight"]) / tot * c / b
+        if ok:
+            p["crypto"] = round(100 * val, 4)
+    latest_day = None
+    for h in hold:
+        pr = prices[h["yahoo"]]
+        if not pr:
+            continue
+        last = pr[max(pr)]
+        latest_day = max(latest_day or max(pr), max(pr))
+        cost = h.get("avgCost")
+        if cost:
+            h["returnPct"] = round(100 * (last / float(cost) - 1), 2)
+            h["returnBasis"] = "since bought"
+        elif base[h["yahoo"]]:
+            h["returnPct"] = round(100 * (last / base[h["yahoo"]] - 1), 2)
+            h["returnBasis"] = f"since {d0.isoformat()}"
+    if latest_day:
+        crypto["asOf"] = latest_day.isoformat()
+    return series
+
+
+def blend(series, site):
+    """Combined portfolio = fixed weights of the stock and crypto sleeves, rebalanced daily."""
+    w = site.get("weights", {})
+    ws, wc = float(w.get("stocks", 100)), float(w.get("crypto", 0))
+    if ws + wc <= 0:
+        ws = 100.0
+    ws, wc = ws / (ws + wc), wc / (ws + wc)
+    for key in ("stocks", "crypto"):
+        b0 = next((p[key] for p in series if key in p), None)
+        if b0:
+            for p in series:
+                if key in p:
+                    p[key] = round(100 * p[key] / b0, 4)
+    level, prev = 100.0, None
+    for p in series:
+        if prev is not None:
+            rs = p["stocks"] / prev["stocks"] - 1 if "stocks" in p and "stocks" in prev else 0.0
+            rc = p["crypto"] / prev["crypto"] - 1 if "crypto" in p and "crypto" in prev else 0.0
+            level *= 1 + ws * rs + wc * rc
+        p["port"] = round(level, 4)
+        prev = p
     return series
 
 
@@ -347,10 +426,9 @@ def write_outputs(nav, flows, positions, first_buy, as_of, site):
     series = chain_index(nav, flows, prev_perf.get("series", []))
     start = date.fromisoformat(series[0]["date"]) if series else as_of
     series = add_benchmark(series, fetch_benchmark(start))
-    if series and series[0].get("port"):  # the track record always starts at exactly 100
-        b0 = series[0]["port"]
-        for p in series:
-            p["port"] = round(100 * p["port"] / b0, 4)
+    crypto = load("crypto.json", {"holdings": []})
+    series = add_crypto(series, crypto, start, as_of)
+    series = blend(series, site)
 
     total = nav.get(max(nav)) if nav else sum(p["value"] for p in positions)
     prev_first = {p["symbol"]: p.get("firstBought") for p in prev_stocks.get("positions", [])}
@@ -395,15 +473,17 @@ def write_outputs(nav, flows, positions, first_buy, as_of, site):
 
     m_port, y_port = monthly(series, "port")
     m_bench, y_bench = monthly(series, "bench")
+    w = site.get("weights", {})
     perf = {
         "asOf": as_of.isoformat(),
-        "method": "Time-weighted, after costs; deposits and withdrawals excluded",
+        "method": f"Combined: {w.get('stocks', 100)}% stocks, {w.get('crypto', 0)}% crypto (fixed weights). Time-weighted, after costs; deposits and withdrawals excluded",
         "series": series,
-        "stats": {"portfolio": stats(series, "port"), "benchmark": stats(series, "bench")},
+        "stats": {"portfolio": stats(series, "port"), "stocks": stats(series, "stocks"), "crypto": stats(series, "crypto"), "benchmark": stats(series, "bench")},
         "monthly": {"portfolio": m_port, "benchmark": m_bench},
         "yearly": {"portfolio": y_port, "benchmark": y_bench},
     }
     save("stocks.json", stocks)
+    save("crypto.json", crypto)
     save("performance.json", perf)
     save("closed.json", closed)
     print(f"Synced {len(shown)} positions ({len(positions) - len(shown)} held back), {len(series)} index points, as of {as_of}.")

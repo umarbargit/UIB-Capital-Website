@@ -75,15 +75,21 @@ content:
           - name: name
             label: Name
             type: string
+          - name: yahoo
+            label: Price code (e.g. ETH-USD, SOL-USD)
+            type: string
+            required: true
+            description: Used to fetch the daily price automatically.
           - name: weight
             label: Weight within crypto (%)
             type: number
-          - name: returnPct
-            label: Return since bought (%)
+          - name: avgCost
+            label: Average buy price in USD (optional)
             type: number
+            description: If filled in, the return is shown since you bought; otherwise since the track record start date.
 
   - name: private
-    label: Private & angel investments
+    label: Angel investments
     type: file
     path: data/private.json
     format: json
@@ -143,16 +149,18 @@ content:
       - name: newPositionDelayDays
         label: Hide new stock positions for this many days (unless a thesis is published)
         type: number
-      - name: allocation
-        label: Allocation split (should add up to 100)
+      - name: weights
+        label: Target weights used for combined performance (should add up to 100)
         type: object
-        list: true
         fields:
-          - name: label
-            label: Asset class
-            type: string
-          - name: pct
-            label: "%"
+          - name: stocks
+            label: Stocks %
+            type: number
+          - name: crypto
+            label: Crypto %
+            type: number
+          - name: angel
+            label: Angel investments %
             type: number
       - name: about
         label: About page paragraphs

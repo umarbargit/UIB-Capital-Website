@@ -105,9 +105,11 @@ function statsBlock() {
 }
 
 function allocationBlock() {
-  const a = site.allocation || []; const cols = ["var(--c1)", "var(--c2)", "var(--c3)", "var(--bench)"];
-  return `<div><div class="alloc-bar" role="img" aria-label="Allocation: ${a.map((x) => `${esc(x.label)} ${x.pct}%`).join(", ")}">${a.map((x, i) => `<span style="width:${x.pct}%;background:${cols[i % 4]}"></span>`).join("")}</div>
-<div class="alloc-legend">${a.map((x, i) => `<span><span class="swatch" style="background:${cols[i % 4]}"></span>${esc(x.label)} <span class="mono">${x.pct}%</span></span>`).join("")}</div></div>`;
+  const w = site.weights || {};
+  const a = [["Stocks", w.stocks ?? 100], ["Crypto", w.crypto ?? 0], ["Angel investments", w.angel ?? 0]];
+  const cols = ["var(--c1)", "var(--c2)", "var(--c3)"];
+  return `<div><div class="alloc-bar" role="img" aria-label="Target weights: ${a.map(([l, p]) => `${l} ${p}%`).join(", ")}">${a.map(([, p], i) => `<span style="width:${p}%;background:${cols[i]}"></span>`).join("")}</div>
+<div class="alloc-legend">${a.map(([l, p], i) => `<span><span class="swatch" style="background:${cols[i]}"></span>${esc(l)} <span class="mono">${p}%</span></span>`).join("")}<span class="muted">Target weights used for combined performance</span></div></div>`;
 }
 
 function stockTable(limit) {
@@ -126,15 +128,24 @@ ${limit && (stocks.positions || []).length > limit ? `<div style="padding:12px 2
 }
 
 function cryptoCard() {
-  return `<div class="card card-pad stack" style="gap:14px"><div class="section-head" style="margin:0"><h3 class="h3">Crypto${sampleTag(crypto)}</h3><span class="mono muted" style="font-size:13px">Updated ${fmtMonth(crypto.asOf)}</span></div>
-<div class="rows">${(crypto.holdings || []).map((h) => `<div class="row"><span><strong>${esc(h.symbol)}</strong> <span class="muted">${esc(h.name)}</span></span><span class="mono">${pct(h.weight, 0, false)} · ${pct(h.returnPct, 0)}</span></div>`).join("")}</div>
-<p class="muted" style="margin:0;font-size:13px">Weight within crypto · return since bought. Kept separate from the stock record.</p></div>`;
+  const basis = (crypto.holdings || []).find((h) => h.returnBasis)?.returnBasis || "since bought";
+  return `<div class="card card-pad stack" style="gap:14px"><div class="section-head" style="margin:0"><h3 class="h3">Crypto${sampleTag(crypto)}</h3><span class="mono muted" style="font-size:13px">Market prices · ${fmtDate(crypto.asOf)}</span></div>
+<div class="rows">${(crypto.holdings || []).map((h) => `<div class="row"><span><strong>${esc(h.symbol)}</strong> <span class="muted">${esc(h.name)}</span></span><span class="mono">${pct(h.weight, 0, false)} · ${pct(h.returnPct, 1)}</span></div>`).join("")}</div>
+<p class="muted" style="margin:0;font-size:13px">Weight within crypto · return ${esc(basis)}. Held long-term in cold storage.</p></div>`;
 }
 
-function privateCard() {
-  return `<div class="card card-pad stack" style="gap:14px"><div class="section-head" style="margin:0"><h3 class="h3">Private &amp; angel${sampleTag(priv)}</h3><span class="mono muted" style="font-size:13px">Updated on new rounds</span></div>
-<div class="rows">${(priv.investments || []).map((i) => `<div class="row"><span><strong>${esc(i.company)}</strong> <span class="muted">${esc(i.sector)}</span><br><span class="muted" style="font-size:14px">${esc(i.note)}</span></span><span class="muted">${esc(i.round)} · ${esc(i.year)}${i.markup ? ` · ${esc(i.markup)}` : ""}</span></div>`).join("")}</div>
-<p class="muted" style="margin:0;font-size:13px">No market price, so no live return.</p></div>`;
+function angelCard() {
+  const inv = priv.investments || [];
+  return `<div class="card card-pad stack" style="gap:14px"><div class="section-head" style="margin:0"><h3 class="h3">Angel investments${sampleTag(priv)}</h3><span class="mono muted" style="font-size:13px">Updated on new rounds</span></div>
+${inv.length ? `<div class="rows">${inv.map((i) => `<div class="row"><span><strong>${esc(i.company)}</strong> <span class="muted">${esc(i.sector)}</span><br><span class="muted" style="font-size:14px">${esc(i.note)}</span></span><span class="muted">${esc(i.round)} · ${esc(i.year)}${i.markup ? ` · ${esc(i.markup)}` : ""}</span></div>`).join("")}</div>
+<p class="muted" style="margin:0;font-size:13px">No market price, so no live return.</p>` : `<p class="muted" style="margin:0">None yet. New investments will be listed here with a short note on why.</p>`}</div>`;
+}
+
+function sleevesTable() {
+  const st = perf.stats || {};
+  const rows = [["Combined portfolio", st.portfolio, true], ["Stocks", st.stocks], ["Crypto", st.crypto], [site.benchmarkName || "S&P 500", st.benchmark]];
+  return `<div class="card table-box"><table><thead><tr><th scope="col"></th><th scope="col" class="num">Since inception</th><th scope="col" class="num">Year to date</th><th scope="col" class="num">Largest fall</th></tr></thead>
+<tbody>${rows.map(([l, x, b]) => `<tr><td>${b ? `<strong>${esc(l)}</strong>` : esc(l)}</td><td class="num">${pct(x?.sinceInception)}</td><td class="num">${pct(x?.ytd)}</td><td class="num">${pct(x?.maxDrawdown)}</td></tr>`).join("")}</tbody></table></div>`;
 }
 
 function chart() {
@@ -220,13 +231,14 @@ ${statsBlock()}
 pages["portfolio.html"] = page({
   title: "Portfolio", active: "/portfolio", desc: `What ${site.name} holds today, as percentages.`,
   body: `<section class="hero" style="padding-bottom:24px"><h1 class="display" style="font-size:clamp(32px,5vw,48px)">Portfolio</h1><p class="lead">What I hold today. Weights and returns only — amounts are never shown.</p></section>
-<div class="stack">${allocationBlock()}${stockTable()}<div class="grid-2">${cryptoCard()}${privateCard()}</div></div>`,
+<div class="stack">${allocationBlock()}${stockTable()}<div class="grid-2">${cryptoCard()}${angelCard()}</div></div>`,
 });
 pages["performance.html"] = page({
   title: "Performance", active: "/performance", desc: `${site.name} performance against the ${site.benchmarkName}.`,
-  body: `<section class="hero" style="padding-bottom:24px"><h1 class="display" style="font-size:clamp(32px,5vw,48px)">Performance</h1><p class="lead">Public stocks only, compared with the ${bench}. Time-weighted and after costs, so money added or withdrawn doesn't count as a gain or loss.</p></section>
+  body: `<section class="hero" style="padding-bottom:24px"><h1 class="display" style="font-size:clamp(32px,5vw,48px)">Performance</h1><p class="lead">The combined portfolio is ${site.weights?.stocks ?? 100}% stocks and ${site.weights?.crypto ?? 0}% crypto, compared with the ${bench}. Time-weighted and after costs, so money added or withdrawn doesn't count as a gain or loss.</p></section>
 ${statsBlock()}
 <section>${chart()}</section>
+<section><div class="section-head"><h2 class="h2">By part of the portfolio</h2></div>${sleevesTable()}</section>
 <section><div class="section-head"><h2 class="h2">Month by month</h2></div>${monthlyTable()}</section>
 <section><div class="section-head"><h2 class="h2">Closed positions</h2></div>${closedTable()}</section>`,
 });
