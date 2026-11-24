@@ -88,9 +88,9 @@ def thesis_tickers():
             head = text.split("---", 2)[1]
             for line in head.splitlines():
                 if line.lower().startswith("ticker:"):
-                    t = line.split(":", 1)[1].strip().strip('"').upper()
-                    if t:
-                        out.add(t)
+                    for t in line.split(":", 1)[1].strip().strip('"').upper().replace("&", ",").replace("/", ",").replace(" ", ",").split(","):
+                        if t:
+                            out.add(t)
     return out
 
 

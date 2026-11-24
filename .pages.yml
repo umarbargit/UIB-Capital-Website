@@ -38,7 +38,7 @@ content:
         options:
           values: [Bought, Sold, Update, View]
       - name: ticker
-        label: Ticker (leave blank for general views)
+        label: Ticker(s) (e.g. MSFT, or ETH, SOL; blank for general views)
         type: string
         description: "Exactly as it appears in IBKR, e.g. MSFT. Publishing a thesis with a ticker also makes a new position show on the site straight away."
       - name: summary

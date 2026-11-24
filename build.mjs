@@ -53,7 +53,9 @@ const posts = (fs.existsSync(thesesDir) ? fs.readdirSync(thesesDir) : [])
   .filter((f) => f.endsWith(".md"))
   .map((f) => parseMd(path.join(thesesDir, f)))
   .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
-const postFor = Object.fromEntries(posts.filter((t) => t.ticker).map((t) => [t.ticker.toUpperCase(), t]));
+const tickersOf = (t) => String(t.ticker || "").toUpperCase().split(/[\s,&\/]+/).filter(Boolean);
+const postFor = {};
+for (const t of [...posts].reverse()) for (const k of tickersOf(t)) postFor[k] = t;
 
 // ------------------------------------------------------------------ layout
 const NAV = [["/#philosophy", "Philosophy"], ["/#portfolio", "Portfolio"], ["/#performance", "Performance"], ["/writing", "Writing"], ["#contact", "Contact"]];
