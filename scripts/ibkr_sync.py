@@ -178,18 +178,56 @@ def parse_flex(xml_text):
 
 # ---------------------------------------------------------------- benchmark
 def fetch_benchmark(start):
-    """Daily SPY closes from Stooq (free, no key). Returns {date: close}."""
+    """Daily SPY closes (dividend-adjusted where available). Returns {date: close}."""
+    out = {}
     try:
-        body = http_get("https://stooq.com/q/d/l/?s=spy.us&i=d", timeout=60)
-        out = {}
-        for row in csv.DictReader(io.StringIO(body)):
-            d = pdate(row.get("Date"))
-            if d and d >= start - timedelta(days=10):
-                out[d] = num(row.get("Close"))
-        return out
+        p1 = int(datetime.combine(start - timedelta(days=10), datetime.min.time()).timestamp())
+        body = http_get(f"https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1={p1}&period2={int(time.time())}&interval=1d", timeout=60)
+        res = json.loads(body)["chart"]["result"][0]
+        closes = (res["indicators"].get("adjclose") or [{}])[0].get("adjclose") or res["indicators"]["quote"][0]["close"]
+        for ts, c in zip(res["timestamp"], closes):
+            if c:
+                out[datetime.utcfromtimestamp(ts).date()] = float(c)
     except Exception as e:
-        print("Benchmark download failed – keeping previous benchmark values:", e)
-        return {}
+        print("Benchmark (Yahoo) failed:", e)
+    if not out:
+        try:
+            body = http_get("https://stooq.com/q/d/l/?s=spy.us&i=d", timeout=60)
+            for row in csv.DictReader(io.StringIO(body)):
+                d = pdate(row.get("Date"))
+                if d and d >= start - timedelta(days=10):
+                    out[d] = num(row.get("Close"))
+        except Exception as e:
+            print("Benchmark (Stooq) failed:", e)
+    print(f"Benchmark: {len(out)} daily prices.")
+    return out
+
+
+def diagnose(xml_text):
+    """Prints the SHAPE of the IBKR report (section names, field names, counts) — never amounts."""
+    root = ET.fromstring(xml_text)
+    counts = {}
+    first = {}
+    for e in root.iter():
+        counts[e.tag] = counts.get(e.tag, 0) + 1
+        if e.tag not in first and e.attrib:
+            first[e.tag] = sorted(e.attrib.keys())
+    print("== Report shape ==")
+    for t, n in counts.items():
+        print(f"{t}: {n}")
+    for t, keys in first.items():
+        if t in ("EquitySummaryByReportDateInBase", "OpenPosition", "CashTransaction", "Trade", "FlexStatement"):
+            print(f"{t} fields: {', '.join(keys)}")
+    kinds = {}
+    for e in root.iter("CashTransaction"):
+        k = (e.get("type"), e.get("levelOfDetail"))
+        kinds[k] = kinds.get(k, 0) + 1
+    print("CashTransaction types:", kinds)
+    pos = {}
+    for e in root.iter("OpenPosition"):
+        k = (e.get("assetCategory"), e.get("levelOfDetail"))
+        pos[k] = pos.get(k, 0) + 1
+    print("OpenPosition kinds:", pos)
 
 
 # ---------------------------------------------------------------- maths
@@ -202,7 +240,11 @@ def chain_index(nav, flows, prev_series):
     for a, b in zip(days, days[1:]):
         base = nav[a] + flows.get(b, 0.0)  # money added that day is treated as invested from the start of the day
         if base > 0:
-            rets[b] = nav[b] / base - 1
+            r = nav[b] / base - 1
+            if abs(r) > 0.35:  # almost certainly money moved in/out that the report did not label – ignore that day
+                print(f"Note: {b} looked like an unlabelled deposit/withdrawal ({100 * r:+.0f}%); not counted as performance.")
+                r = 0.0
+            rets[b] = r
     prev = {p["date"]: p for p in prev_series}
     start = days[0].isoformat()
     kept = [p for p in prev_series if p["date"] < start]
@@ -414,7 +456,9 @@ def main():
         if not token or not query:
             raise SystemExit("IBKR_FLEX_TOKEN / IBKR_FLEX_QUERY are not set – add them as GitHub secrets.")
         xml_text = fetch_flex(token, query)
+    diagnose(xml_text)
     nav, flows, positions, first_buy = parse_flex(xml_text)
+    print(f"NAV days: {len(nav)}, deposit/withdrawal days: {len(flows)}, stock positions: {len(positions)}")
     del xml_text  # the raw file (with money amounts) is never written anywhere
     as_of = max(nav) if nav else date.today()
     write_outputs(nav, flows, positions, first_buy, as_of, site)
