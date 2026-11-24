@@ -141,7 +141,7 @@ def parse_flex(xml_text):
         if "deposit" in t or "withdraw" in t:
             if (e.get("levelOfDetail") or "DETAIL").upper() == "SUMMARY":
                 continue
-            d = pdate(e.get("settleDate") or e.get("dateTime") or e.get("reportDate"))
+            d = pdate(e.get("reportDate") or e.get("settleDate") or e.get("dateTime"))
             if d:
                 rate = num(e.get("fxRateToBase"), 1.0) or 1.0
                 flows[d] = flows.get(d, 0.0) + num(e.get("amount")) * rate
@@ -337,6 +337,13 @@ def write_outputs(nav, flows, positions, first_buy, as_of, site):
     if closed.get("sample"):
         closed = {"positions": []}
 
+    # The public track record starts on site.json "startDate"; earlier days are ignored.
+    start_cfg = site.get("startDate")
+    if start_cfg:
+        sd = date.fromisoformat(start_cfg)
+        nav = {d: v for d, v in nav.items() if d >= sd}
+        flows = {d: v for d, v in flows.items() if d >= sd}
+        prev_perf["series"] = [p for p in prev_perf.get("series", []) if p["date"] >= start_cfg]
     series = chain_index(nav, flows, prev_perf.get("series", []))
     start = date.fromisoformat(series[0]["date"]) if series else as_of
     series = add_benchmark(series, fetch_benchmark(start))

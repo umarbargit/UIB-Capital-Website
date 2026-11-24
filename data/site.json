@@ -2,7 +2,7 @@
   "name": "UIB Capital",
   "tagline": "A personal portfolio, run in public.",
   "intro": "Every position, every thesis, every result — shown as percentages and updated automatically from the broker. Public stocks, crypto and early-stage investments.",
-  "startDate": "2026-01-02",
+  "startDate": "2026-11-23",
   "benchmarkName": "S&P 500 (SPY)",
   "newPositionDelayDays": 7,
   "allocation": [
