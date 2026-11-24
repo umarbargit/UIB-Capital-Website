@@ -1,0 +1,176 @@
+# Pages CMS – private editing panel for the UIB Capital site.
+# Log in at https://app.pagescms.org with GitHub and open this repository.
+# Every save is committed to GitHub, and Vercel republishes the site in about a minute.
+
+media:
+  input: public/images
+  output: /images
+
+content:
+  - name: theses
+    label: Theses & notes
+    type: collection
+    path: content/theses
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      fields: [title, date, ticker, type]
+      primary: title
+      sort: [date]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: date
+        label: Date published
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: type
+        label: Type
+        type: select
+        required: true
+        options:
+          values: [Bought, Sold, Update, View]
+      - name: ticker
+        label: Ticker (leave blank for general views)
+        type: string
+        description: "Exactly as it appears in IBKR, e.g. MSFT. Publishing a thesis with a ticker also makes a new position show on the site straight away."
+      - name: summary
+        label: Two-line summary
+        type: text
+        required: true
+      - name: body
+        label: Full write-up
+        type: rich-text
+
+  - name: crypto
+    label: Crypto holdings
+    type: file
+    path: data/crypto.json
+    format: json
+    fields:
+      - name: sample
+        label: Still sample data (shows a 'Sample' label)
+        type: boolean
+      - name: asOf
+        label: Updated on
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: holdings
+        label: Holdings
+        type: object
+        list: true
+        fields:
+          - name: symbol
+            label: Symbol
+            type: string
+            required: true
+          - name: name
+            label: Name
+            type: string
+          - name: weight
+            label: Weight within crypto (%)
+            type: number
+          - name: returnPct
+            label: Return since bought (%)
+            type: number
+
+  - name: private
+    label: Private & angel investments
+    type: file
+    path: data/private.json
+    format: json
+    fields:
+      - name: sample
+        label: Still sample data (shows a 'Sample' label)
+        type: boolean
+      - name: investments
+        label: Investments
+        type: object
+        list: true
+        fields:
+          - name: company
+            label: Company
+            type: string
+            required: true
+          - name: sector
+            label: Sector
+            type: string
+          - name: round
+            label: Round (e.g. Seed)
+            type: string
+          - name: year
+            label: Year invested
+            type: number
+          - name: note
+            label: One line on why
+            type: string
+          - name: markup
+            label: Value change (optional, e.g. "1.8x at last round")
+            type: string
+
+  - name: site
+    label: Site settings & About
+    type: file
+    path: data/site.json
+    format: json
+    fields:
+      - name: name
+        label: Site name
+        type: string
+      - name: tagline
+        label: Headline
+        type: string
+      - name: intro
+        label: Intro paragraph
+        type: text
+      - name: startDate
+        label: Track record start date
+        type: date
+        description: Days before this are ignored in performance figures.
+        options:
+          format: yyyy-MM-dd
+      - name: benchmarkName
+        label: Benchmark name
+        type: string
+      - name: newPositionDelayDays
+        label: Hide new stock positions for this many days (unless a thesis is published)
+        type: number
+      - name: allocation
+        label: Allocation split (should add up to 100)
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Asset class
+            type: string
+          - name: pct
+            label: "%"
+            type: number
+      - name: about
+        label: About page paragraphs
+        type: text
+        list: true
+      - name: contact
+        label: Contact email (optional)
+        type: string
+      - name: newsletter
+        label: Email newsletter
+        type: object
+        fields:
+          - name: provider
+            label: Provider
+            type: string
+          - name: username
+            label: Buttondown username (leave blank to hide the sign-up box)
+            type: string
+      - name: disclaimer
+        label: Footer disclaimer
+        type: text
