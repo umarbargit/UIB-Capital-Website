@@ -2,7 +2,7 @@
   "name": "UIB Capital",
   "tagline": "A personal portfolio, run in public.",
   "intro": "Every position, every thesis, every result — shown as percentages and updated automatically from the broker. Public stocks, crypto and early-stage investments.",
-  "startDate": "2026-11-23",
+  "startDate": "2026-11-24",
   "weights": {
     "stocks": 80,
     "crypto": 20,

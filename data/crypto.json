@@ -6,19 +6,21 @@
       "symbol": "ETH",
       "name": "Ethereum",
       "yahoo": "ETH-USD",
-      "weight": 57.1,
+      "startWeight": 43.9,
+      "weight": 43.9,
       "avgCost": null,
-      "returnPct": -1.61,
-      "returnBasis": "since 2026-11-23"
+      "returnPct": 0.0,
+      "returnBasis": "since 2026-11-24"
     },
     {
       "symbol": "SOL",
       "name": "Solana",
       "yahoo": "SOL-USD",
-      "weight": 42.9,
+      "startWeight": 56.1,
+      "weight": 56.1,
       "avgCost": null,
-      "returnPct": -1.84,
-      "returnBasis": "since 2026-11-23"
+      "returnPct": 0.0,
+      "returnBasis": "since 2026-11-24"
     }
   ]
 }

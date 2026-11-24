@@ -80,9 +80,10 @@ content:
             type: string
             required: true
             description: Used to fetch the daily price automatically.
-          - name: weight
-            label: Weight within crypto (%)
+          - name: startWeight
+            label: Weight within crypto on the start date (%)
             type: number
+            description: Today's weight is worked out automatically from price moves.
           - name: avgCost
             label: Average buy price in USD (optional)
             type: number

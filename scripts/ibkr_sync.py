@@ -303,7 +303,9 @@ def add_crypto(series, crypto, start, as_of):
     """Crypto sleeve: buy-and-hold basket of the coins in data/crypto.json at their stated weights.
     Also refreshes each coin's return in crypto.json."""
     hold = [h for h in crypto.get("holdings", []) if h.get("yahoo")]
-    tot = sum(float(h.get("weight") or 0) for h in hold)
+    for h in hold:  # 'startWeight' = weight on the start date; 'weight' = today's weight after price moves
+        h.setdefault("startWeight", h.get("weight"))
+    tot = sum(float(h.get("startWeight") or 0) for h in hold)
     if not hold or not tot or not series:
         return series
     d0 = date.fromisoformat(series[0]["date"])
@@ -317,7 +319,7 @@ def add_crypto(series, crypto, start, as_of):
             if not c or not b:
                 ok = False
                 break
-            val += float(h["weight"]) / tot * c / b
+            val += float(h["startWeight"]) / tot * c / b
         if ok:
             p["crypto"] = round(100 * val, 4)
     latest_day = None
@@ -334,6 +336,16 @@ def add_crypto(series, crypto, start, as_of):
         elif base[h["yahoo"]]:
             h["returnPct"] = round(100 * (last / base[h["yahoo"]] - 1), 2)
             h["returnBasis"] = f"since {d0.isoformat()}"
+    now = {}
+    for h in hold:
+        pr, b = prices[h["yahoo"]], base[h["yahoo"]]
+        if pr and b:
+            now[h["yahoo"]] = float(h["startWeight"]) * pr[max(pr)] / b
+    if now:
+        t = sum(now.values())
+        for h in hold:
+            if h["yahoo"] in now:
+                h["weight"] = round(100 * now[h["yahoo"]] / t, 1)
     if latest_day:
         crypto["asOf"] = latest_day.isoformat()
     return series
