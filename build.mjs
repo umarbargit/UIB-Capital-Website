@@ -69,7 +69,7 @@ function page({ title, desc, active, body, closing = true }) {
 <meta name="description" content="${esc(d)}">
 <meta property="og:title" content="${esc(full)}">
 <meta property="og:description" content="${esc(d)}">
-<meta name="theme-color" content="#2B7FD4">
+<meta name="theme-color" content="#EAF6FF">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
