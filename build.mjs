@@ -27,7 +27,8 @@ const pct = (v, dp = 1, sign = true) => {
   const s = (sign && n > 0 ? "+" : n < 0 ? "−" : "") + Math.abs(n).toFixed(dp) + "%";
   return cls ? `<span class="${cls}">${s}</span>` : s;
 };
-const isSample = [stocks, perf, closed, crypto, priv].some((d) => d && d.sample);
+const isSample = [stocks, perf, closed].some((d) => d && d.sample);
+const sampleTag = (d) => (d && d.sample && !isSample ? ' <span class="pill">Sample</span>' : "");
 
 // ------------------------------------------------------------------ theses
 function parseMd(file) {
@@ -96,7 +97,7 @@ const asOf = stocks.asOf || perf.asOf;
 function statsBlock() {
   const nPos = (stocks.positions || []).length;
   return `<section aria-label="Headline numbers" style="padding-top:0"><div class="stats">
-<div class="stat"><span class="stat-label">Since inception (${fmtMonth(site.startDate)})</span><span class="stat-value">${pct(pS.sinceInception)}</span><span class="stat-label">${bench}: ${pct(bS.sinceInception, 1, false)}</span></div>
+<div class="stat"><span class="stat-label">Since inception (${fmtMonth(perf.series?.[0]?.date || site.startDate)})</span><span class="stat-value">${pct(pS.sinceInception)}</span><span class="stat-label">${bench}: ${pct(bS.sinceInception, 1, false)}</span></div>
 <div class="stat"><span class="stat-label">Year to date</span><span class="stat-value">${pct(pS.ytd)}</span><span class="stat-label">${bench}: ${pct(bS.ytd, 1, false)}</span></div>
 <div class="stat"><span class="stat-label">Largest fall from a peak</span><span class="stat-value">${pct(pS.maxDrawdown)}</span><span class="stat-label">${bench}: ${pct(bS.maxDrawdown, 1, false)}</span></div>
 <div class="stat"><span class="stat-label">Stock positions held</span><span class="stat-value">${nPos}</span><span class="stat-label">${(() => { const n = theses.filter((t) => t.type !== "View").length; return `${n} ${n === 1 ? "thesis" : "theses"} published`; })()}</span></div>
@@ -125,13 +126,13 @@ ${limit && (stocks.positions || []).length > limit ? `<div style="padding:12px 2
 }
 
 function cryptoCard() {
-  return `<div class="card card-pad stack" style="gap:14px"><div class="section-head" style="margin:0"><h3 class="h3">Crypto</h3><span class="mono muted" style="font-size:13px">Updated ${fmtMonth(crypto.asOf)}</span></div>
+  return `<div class="card card-pad stack" style="gap:14px"><div class="section-head" style="margin:0"><h3 class="h3">Crypto${sampleTag(crypto)}</h3><span class="mono muted" style="font-size:13px">Updated ${fmtMonth(crypto.asOf)}</span></div>
 <div class="rows">${(crypto.holdings || []).map((h) => `<div class="row"><span><strong>${esc(h.symbol)}</strong> <span class="muted">${esc(h.name)}</span></span><span class="mono">${pct(h.weight, 0, false)} · ${pct(h.returnPct, 0)}</span></div>`).join("")}</div>
 <p class="muted" style="margin:0;font-size:13px">Weight within crypto · return since bought. Kept separate from the stock record.</p></div>`;
 }
 
 function privateCard() {
-  return `<div class="card card-pad stack" style="gap:14px"><div class="section-head" style="margin:0"><h3 class="h3">Private &amp; angel</h3><span class="mono muted" style="font-size:13px">Updated on new rounds</span></div>
+  return `<div class="card card-pad stack" style="gap:14px"><div class="section-head" style="margin:0"><h3 class="h3">Private &amp; angel${sampleTag(priv)}</h3><span class="mono muted" style="font-size:13px">Updated on new rounds</span></div>
 <div class="rows">${(priv.investments || []).map((i) => `<div class="row"><span><strong>${esc(i.company)}</strong> <span class="muted">${esc(i.sector)}</span><br><span class="muted" style="font-size:14px">${esc(i.note)}</span></span><span class="muted">${esc(i.round)} · ${esc(i.year)}${i.markup ? ` · ${esc(i.markup)}` : ""}</span></div>`).join("")}</div>
 <p class="muted" style="margin:0;font-size:13px">No market price, so no live return.</p></div>`;
 }
