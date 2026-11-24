@@ -32,7 +32,7 @@ which is exactly what happened.
 spacex listed in june. $75bn+ raised at around $1.77tn.<br>
 anthropic followed on 19 november. about $81bn raised, plus another $26bn privately, at around $1.5tn.
 
-openai is too late to the party. it got too cosy with the government, and i think it ends up as a government puppet: teasing an ipo every few months and never actually doing one.
+openai is too late to the party. it won't even ipo. it'll keep teasing one and never actually do it.
 
 every dollar that goes into a new listing comes out of something else. two of the biggest raises in history, five months apart. that's a lot of money pulled out of everything else.
 
