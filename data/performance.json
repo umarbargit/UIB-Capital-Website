@@ -1,15 +1,18 @@
 {
   "asOf": "2026-11-23",
-  "method": "Time-weighted, after costs; deposits and withdrawals excluded",
+  "method": "Combined: 80% stocks, 20% crypto (fixed weights). Time-weighted, after costs; deposits and withdrawals excluded",
   "series": [
     {
       "date": "2026-11-23",
       "port": 100.0,
-      "bench": 100.0
+      "bench": 100.0,
+      "crypto": 100.0
     }
   ],
   "stats": {
     "portfolio": {},
+    "stocks": {},
+    "crypto": {},
     "benchmark": {}
   },
   "monthly": {
