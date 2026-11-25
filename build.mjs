@@ -94,7 +94,7 @@ ${body}
 ${closing ? closingBlock() : ""}
 </main>
 <footer class="site-footer"><div class="wrap">
-<p>${esc(site.disclaimer)}</p>
+<p>${esc(site.disclaimer)}${site.official ? `<br><br>${esc(site.official)}` : ""}</p>
 <span class="foot-links"><a href="/privacy">Privacy</a><a href="#" data-cookie-settings>Cookie settings</a><span>© ${new Date().getUTCFullYear()} ${esc(site.name)}</span></span>
 </div></footer>
 </body>
@@ -235,7 +235,6 @@ pages["index.html"] = page({
   body: `<section class="hero">
 <h1>${esc(site.headline)}</h1>
 <p>${esc(site.intro)}</p>
-<div class="live"><i aria-hidden="true"></i>Updated ${fmtDate(asOf)}</div>
 </section>
 ${block("about", "01", "Who I am", `<h2>About</h2><div class="prose">${(site.about || []).map((p) => `<p>${esc(p)}</p>`).join("")}</div>`)}
 ${block("philosophy", "02", "Philosophy", `<h2>How I invest</h2><ol class="principles">${(site.principles || []).map((p) => `<li><div><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p></div></li>`).join("")}</ol>`)}
