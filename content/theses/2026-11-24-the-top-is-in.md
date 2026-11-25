@@ -100,6 +100,7 @@ as for stocks, i'll be picking them up at a discount over the next year or two. 
 
 **more research needed**
 
+- cloudflare
 - lumentum
 - rivian
 - cleveland-cliffs
