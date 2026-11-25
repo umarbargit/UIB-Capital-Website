@@ -1,10 +1,12 @@
 name: Nightly IBKR sync
 
-# Runs every weekday evening after the US market closes (22:30 UTC),
-# and can also be started by hand from the GitHub "Actions" tab.
+# IBKR publishes each day's statement overnight, so this runs the next morning
+# (07:00 UTC, with a 13:00 UTC back-up run), Tuesday to Saturday.
+# It can also be started by hand from the GitHub "Actions" tab.
 on:
   schedule:
-    - cron: "30 22 * * 1-5"
+    - cron: "0 7 * * 2-6"
+    - cron: "0 13 * * 2-6"
   workflow_dispatch:
 
 permissions:
