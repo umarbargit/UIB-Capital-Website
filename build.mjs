@@ -80,6 +80,7 @@ function page({ title, desc, active, body, closing = true, path: pth = "/" }) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 ${isSample ? '<div class="sample" role="note">Preview: this site is showing sample data, not real holdings.</div>' : ""}
