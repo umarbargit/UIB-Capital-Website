@@ -13,16 +13,16 @@
     {
       "date": "2026-11-25",
       "stocks": 100.0,
-      "bench": 98.8397,
-      "crypto": 99.3304,
-      "port": 99.7991
+      "bench": 99.7106,
+      "crypto": 100.7812,
+      "port": 100.2344
     }
   ],
   "stats": {
     "portfolio": {
-      "sinceInception": -0.2,
-      "ytd": -0.2,
-      "maxDrawdown": -0.2
+      "sinceInception": 0.23,
+      "ytd": 0.23,
+      "maxDrawdown": 0.0
     },
     "stocks": {
       "sinceInception": 0.0,
@@ -30,34 +30,34 @@
       "maxDrawdown": 0.0
     },
     "crypto": {
-      "sinceInception": -0.67,
-      "ytd": -0.67,
-      "maxDrawdown": -0.67
+      "sinceInception": 0.78,
+      "ytd": 0.78,
+      "maxDrawdown": 0.0
     },
     "benchmark": {
-      "sinceInception": -1.16,
-      "ytd": -1.16,
-      "maxDrawdown": -1.16
+      "sinceInception": -0.29,
+      "ytd": -0.29,
+      "maxDrawdown": -0.29
     }
   },
   "monthly": {
     "portfolio": {
       "2026": {
-        "11": -0.2
+        "11": 0.23
       }
     },
     "benchmark": {
       "2026": {
-        "11": -1.16
+        "11": -0.29
       }
     }
   },
   "yearly": {
     "portfolio": {
-      "2026": -0.2
+      "2026": 0.23
     },
     "benchmark": {
-      "2026": -1.16
+      "2026": -0.29
     }
   }
 }
