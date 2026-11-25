@@ -59,7 +59,7 @@ for (const t of [...posts].reverse()) for (const k of tickersOf(t)) postFor[k] =
 
 // ------------------------------------------------------------------ layout
 const NAV = [["/#philosophy", "Philosophy"], ["/#portfolio", "Portfolio"], ["/#performance", "Performance"], ["/writing", "Writing"], ["#contact", "Contact"]];
-function page({ title, desc, active, body, closing = true }) {
+function page({ title, desc, active, body, closing = true, path: pth = "/" }) {
   const full = title ? `${title} | ${site.name}` : site.name;
   const d = desc || site.intro;
   return `<!doctype html>
@@ -69,6 +69,9 @@ function page({ title, desc, active, body, closing = true }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(full)}</title>
 <meta name="description" content="${esc(d)}">
+<link rel="canonical" href="${esc((site.url || "") + pth)}">
+<meta property="og:url" content="${esc((site.url || "") + pth)}">
+<meta property="og:type" content="website">
 <meta property="og:title" content="${esc(full)}">
 <meta property="og:description" content="${esc(d)}">
 <meta name="theme-color" content="#0F2236">
@@ -238,18 +241,18 @@ ${block("portfolio", "03", "Portfolio", `<h2>What I own</h2>${allocation()}${sto
 ${block("performance", "04", "Performance", `<h2>How it's done</h2>${stats()}${chart()}${sleeves()}<a class="more" href="/performance">Monthly returns and closed positions</a>`)}
 ${block("writing", "05", "Writing", `<h2>Theses and notes</h2>${postList(posts.slice(0, 5))}${posts.length > 5 ? `<a class="more" href="/writing">Everything I've written</a>` : ""}`)}`,
 });
-pages["performance.html"] = page({
+pages["performance.html"] = page({ path: "/performance",
   title: "Performance", active: "/#performance", desc: `${site.name} performance against the ${site.benchmarkName}.`,
   body: `<section class="hero" style="padding:80px 0 48px"><h1>Performance</h1><p>${W.stocks}% stocks and ${W.crypto}% crypto, compared with the ${bench}. Time-weighted and after costs.</p></section>
 ${block("record", "04", "Performance", `${stats()}${chart()}${sleeves()}${monthly()}${closedList()}`)}`,
 });
-pages["writing.html"] = page({
+pages["writing.html"] = page({ path: "/writing",
   title: "Writing", active: "/writing", desc: `Theses and notes from ${site.name}.`,
   body: `<section class="hero" style="padding:80px 0 48px"><h1>Writing</h1><p>Why I bought, why I sold and what I think. Dated, so you can check me against what happened next.</p></section>
 ${block("all", "05", "Writing", postList(posts))}`,
 });
 for (const t of posts) {
-  pages[`writing/${t.slug}.html`] = page({
+  pages[`writing/${t.slug}.html`] = page({ path: `/writing/${t.slug}`,
     title: t.title, active: "/writing", desc: t.summary,
     body: `<article class="article"><a href="/writing">All writing</a>
 <p class="meta">${fmtDate(t.date)}${t.ticker ? ` | ${esc(t.ticker)}` : ""}${t.type ? ` | ${esc(t.type)}` : ""}</p>
@@ -265,4 +268,7 @@ fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, "writing"), { recursive: true });
 for (const [f, html] of Object.entries(pages)) fs.writeFileSync(path.join(OUT, f), html);
 fs.cpSync(path.join(ROOT, "public"), OUT, { recursive: true });
+const urls = ["/", "/performance", "/writing", ...posts.map((t) => `/writing/${t.slug}`)];
+fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${site.url}${u}</loc></url>`).join("\n")}\n</urlset>\n`);
+fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`);
 console.log(`Built ${Object.keys(pages).length} pages into dist/${isSample ? " (SAMPLE data)" : ""}.`);
