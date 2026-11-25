@@ -103,7 +103,7 @@ const st = perf.stats || {};
 const pS = st.portfolio || {}, bS = st.benchmark || {};
 const bench = esc(site.benchmarkName || "S&P 500");
 const benchShort = bench.split(" (")[0];
-const asOf = stocks.asOf || perf.asOf;
+const asOf = perf.asOf || stocks.asOf;
 const inception = perf.series?.[0]?.date || site.startDate;
 
 function stats() {

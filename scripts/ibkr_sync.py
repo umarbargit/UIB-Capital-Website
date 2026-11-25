@@ -435,8 +435,21 @@ def write_outputs(nav, flows, positions, first_buy, as_of, site):
         nav = {d: v for d, v in nav.items() if d >= sd}
         flows = {d: v for d, v in flows.items() if d >= sd}
         prev_perf["series"] = [p for p in prev_perf.get("series", []) if p["date"] >= start_cfg]
-    series = chain_index(nav, flows, prev_perf.get("series", []))
-    start = date.fromisoformat(series[0]["date"]) if series else as_of
+    stock_series = chain_index(nav, flows, prev_perf.get("series", []))
+    # Build a DAILY calendar from the start date to today. Crypto trades every day, so it
+    # updates even when IBKR hasn't published new figures yet; the stock index is carried
+    # forward on days without a new IBKR value (weekends, holidays, not yet published).
+    if start_cfg:
+        start = date.fromisoformat(start_cfg)
+    else:
+        start = date.fromisoformat(stock_series[0]["date"]) if stock_series else as_of
+    smap = {p["date"]: p["stocks"] for p in stock_series if "stocks" in p}
+    last = next((p["stocks"] for p in stock_series if "stocks" in p), 100.0)
+    series, d = [], start
+    while d <= date.today():
+        last = smap.get(d.isoformat(), last)
+        series.append({"date": d.isoformat(), "stocks": round(last, 4)})
+        d += timedelta(days=1)
     series = add_benchmark(series, fetch_benchmark(start))
     crypto = load("crypto.json", {"holdings": []})
     series = add_crypto(series, crypto, start, as_of)
@@ -487,7 +500,8 @@ def write_outputs(nav, flows, positions, first_buy, as_of, site):
     m_bench, y_bench = monthly(series, "bench")
     w = site.get("weights", {})
     perf = {
-        "asOf": as_of.isoformat(),
+        "asOf": series[-1]["date"] if series else as_of.isoformat(),
+        "stocksAsOf": as_of.isoformat(),
         "method": f"Combined: {w.get('stocks', 100)}% stocks, {w.get('crypto', 0)}% crypto (fixed weights). Time-weighted, after costs; deposits and withdrawals excluded",
         "series": series,
         "stats": {"portfolio": stats(series, "port"), "stocks": stats(series, "stocks"), "crypto": stats(series, "crypto"), "benchmark": stats(series, "bench")},
