@@ -1,15 +1,15 @@
 {
   "sample": false,
-  "asOf": "2026-11-24",
+  "asOf": "2026-11-25",
   "holdings": [
     {
       "symbol": "ETH",
       "name": "Ethereum",
       "yahoo": "ETH-USD",
       "startWeight": 43.9,
-      "weight": 43.9,
+      "weight": 44.2,
       "avgCost": null,
-      "returnPct": 0.0,
+      "returnPct": -3.02,
       "returnBasis": "since 2026-11-24"
     },
     {
@@ -17,9 +17,9 @@
       "name": "Solana",
       "yahoo": "SOL-USD",
       "startWeight": 56.1,
-      "weight": 56.1,
+      "weight": 55.8,
       "avgCost": null,
-      "returnPct": 0.0,
+      "returnPct": -4.36,
       "returnBasis": "since 2026-11-24"
     }
   ]
