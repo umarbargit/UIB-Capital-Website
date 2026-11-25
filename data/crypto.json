@@ -7,9 +7,9 @@
       "name": "Ethereum",
       "yahoo": "ETH-USD",
       "startWeight": 43.9,
-      "weight": 44.2,
+      "weight": 44.0,
       "avgCost": null,
-      "returnPct": -3.02,
+      "returnPct": -0.36,
       "returnBasis": "since 2026-11-24"
     },
     {
@@ -17,9 +17,9 @@
       "name": "Solana",
       "yahoo": "SOL-USD",
       "startWeight": 56.1,
-      "weight": 55.8,
+      "weight": 56.0,
       "avgCost": null,
-      "returnPct": -4.36,
+      "returnPct": -0.91,
       "returnBasis": "since 2026-11-24"
     }
   ]
