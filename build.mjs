@@ -81,8 +81,9 @@ function page({ title, desc, active, body, closing = true, path: pth = "/" }) {
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css">
 <script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/consent.js"></script>
 </head>
-<body>
+<body data-ga="${esc(site.analytics?.ga4 || "")}" data-li="${esc(site.analytics?.linkedin || "")}">
 ${isSample ? '<div class="sample" role="note">Preview: this site is showing sample data, not real holdings.</div>' : ""}
 <header class="site-header"><div class="wrap">
 <a class="brand" href="/">${esc(site.name)}</a>
@@ -94,7 +95,7 @@ ${closing ? closingBlock() : ""}
 </main>
 <footer class="site-footer"><div class="wrap">
 <p>${esc(site.disclaimer)}</p>
-<span>© ${new Date().getUTCFullYear()} ${esc(site.name)}</span>
+<span class="foot-links"><a href="/privacy">Privacy</a><a href="#" data-cookie-settings>Cookie settings</a><span>© ${new Date().getUTCFullYear()} ${esc(site.name)}</span></span>
 </div></footer>
 </body>
 </html>`;
@@ -262,6 +263,28 @@ ${t.summary ? `<p class="lead">${esc(t.summary)}</p>` : ""}
 <div class="body">${t.html}</div></article>`,
   });
 }
+pages["privacy.html"] = page({ path: "/privacy", title: "Privacy", closing: false, desc: `How ${site.name} uses cookies and visitor data.`,
+  body: `<article class="article"><a href="/">Home</a>
+<h1>Privacy and cookies</h1>
+<p class="lead">Short version: I want to know how people find this site and what they read. I don't sell anything, and I don't sell your data.</p>
+<div class="body">
+<h3>Who runs this site</h3>
+<p>${esc(site.name)} is a personal site. Questions about this page go to <a href="mailto:${esc(site.contact)}">${esc(site.contact)}</a>.</p>
+<h3>Without cookies (everyone)</h3>
+<p>Vercel, the host, counts page views, countries, devices and referring sites. It doesn't use cookies and doesn't identify you.</p>
+<h3>With cookies (only if you click Accept)</h3>
+<ul>
+<li><b>Google Analytics</b> - which pages you visit, how long you stay, roughly where you are and what device you use. Google's cookies (_ga) last up to 2 years.</li>
+<li><b>LinkedIn Insight Tag</b> - lets LinkedIn show me, in anonymous totals, the job titles, companies and industries of LinkedIn members who visit. I never see who you are. LinkedIn's cookies last up to 6 months.</li>
+</ul>
+<p>If you click Decline, neither of these loads. You can change your mind any time with the "Cookie settings" link at the bottom of every page.</p>
+<h3>What I don't do</h3>
+<p>No contact forms, no accounts, no newsletter sign-up yet, no selling or sharing data with anyone else.</p>
+<h3>Your rights</h3>
+<p>If you're in the UK or EU you can ask for access to or deletion of data. Since I only see anonymous totals, the quickest route is usually Google's or LinkedIn's own privacy settings, but you can also email me.</p>
+<p class="meta">Last updated 25 November 2026.</p>
+</div></article>`,
+});
 pages["404.html"] = page({ title: "Not found", closing: false, body: `<section class="hero"><h1>Nothing here.</h1><p><a href="/">Back to the home page</a></p></section>` });
 
 // ------------------------------------------------------------------ write
@@ -269,7 +292,7 @@ fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, "writing"), { recursive: true });
 for (const [f, html] of Object.entries(pages)) fs.writeFileSync(path.join(OUT, f), html);
 fs.cpSync(path.join(ROOT, "public"), OUT, { recursive: true });
-const urls = ["/", "/performance", "/writing", ...posts.map((t) => `/writing/${t.slug}`)];
+const urls = ["/", "/performance", "/writing", "/privacy", ...posts.map((t) => `/writing/${t.slug}`)];
 fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${site.url}${u}</loc></url>`).join("\n")}\n</urlset>\n`);
 fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${site.url}/sitemap.xml\n`);
 console.log(`Built ${Object.keys(pages).length} pages into dist/${isSample ? " (SAMPLE data)" : ""}.`);

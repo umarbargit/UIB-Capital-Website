@@ -45,5 +45,9 @@
   },
   "disclaimer": "UIB Capital is a personal portfolio. Nothing here is investment advice, a recommendation or an offer to manage money. Figures are percentages taken from broker data and market prices, and past results don't predict future ones.",
   "linkedin": "https://www.linkedin.com/in/umarbargit/",
-  "url": "https://uibcapital.io"
+  "url": "https://uibcapital.io",
+  "analytics": {
+    "ga4": "G-1XG7DF7XN4",
+    "linkedin": "10199402"
+  }
 }

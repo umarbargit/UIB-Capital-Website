@@ -159,3 +159,13 @@ a:hover { color: var(--accent-ink); }
 .closing .btn { color: #2C7DBF; }
 .hero { border-bottom: 0; }
 .closing .btn-ghost { color: #fff; }
+
+/* cookie banner + footer links */
+.foot-links { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; }
+.foot-links a { color: var(--muted); }
+.consent { position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 50; max-width: 720px; margin: 0 auto; background: #16304B; border: 1px solid #469DDD; padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+.consent p { margin: 0; font-size: 14px; color: var(--ink); flex: 1 1 280px; }
+.consent a { color: var(--accent-ink); }
+.consent-btns { display: flex; gap: 8px; }
+.consent .btn { min-height: 40px; padding: 0 16px; font-size: 14px; border: 1px solid #fff; cursor: pointer; font-family: inherit; color: #2C7DBF; }
+.consent .btn-ghost { color: #fff; }
