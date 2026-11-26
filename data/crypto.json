@@ -7,22 +7,22 @@
       "name": "Ethereum",
       "yahoo": "ETH-USD",
       "startWeight": 43.9,
-      "weight": 43.6,
+      "weight": 43.7,
       "avgCost": 1677.69,
-      "returnPct": 0.47,
+      "returnPct": 0.85,
       "returnBasis": "since bought",
-      "price": 1685.64
+      "price": 1691.87
     },
     {
       "symbol": "SOL",
       "name": "Solana",
       "yahoo": "SOL-USD",
       "startWeight": 56.1,
-      "weight": 56.4,
+      "weight": 56.3,
       "avgCost": 69.64,
-      "returnPct": 1.55,
+      "returnPct": 1.84,
       "returnBasis": "since bought",
-      "price": 70.72
+      "price": 70.92
     }
   ]
 }
