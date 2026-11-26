@@ -175,7 +175,7 @@ function chart() {
   const last = pts[pts.length - 1];
   const font = 'font-size="12" fill="var(--muted)" font-family="JetBrains Mono, monospace"';
   const M = (v) => "$" + Math.round(v * 10000).toLocaleString("en-US");
-  const K = (v) => { const n = v * 10000; return n >= 1e6 ? "$" + (n / 1e6).toFixed(n >= 1e7 ? 1 : 2) + "M" : "$" + Math.round(n / 1000) + "K"; };
+  const K = (v) => { const n = v * 10000; return n >= 1e7 ? "$" + (n / 1e6).toFixed(1) + "M" : "$" + Math.round(n / 1000).toLocaleString("en-US") + "K"; };
   const diff = last.bench !== undefined ? (last.port - last.bench) * 10000 : null;
   return `<div class="grow">
 <p class="grow-k">$1,000,000 invested on ${fmtDate(pts[0].date)} would now be worth</p>
