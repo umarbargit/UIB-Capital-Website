@@ -162,6 +162,10 @@ def parse_flex(xml_text):
             "name": e.get("description") or "",
             "value": val,
             "cost": cost,
+            # per-share prices in the stock's own currency (no amounts or share counts)
+            "avgCost": num(e.get("costBasisPrice")) or None,
+            "price": num(e.get("markPrice")) or None,
+            "currency": e.get("currency") or "USD",
         })
     # First buy date per symbol (within the report window)
     first_buy = {}
@@ -329,6 +333,9 @@ def add_crypto(series, crypto, start, as_of):
             continue
         last = pr[max(pr)]
         latest_day = max(latest_day or max(pr), max(pr))
+        h["price"] = round(last, 2)
+        if not h.get("avgCost") and base[h["yahoo"]]:
+            h["avgCost"] = round(base[h["yahoo"]], 2)  # entry price = close on the start date
         cost = h.get("avgCost")
         if cost:
             h["returnPct"] = round(100 * (last / float(cost) - 1), 2)
@@ -475,6 +482,9 @@ def write_outputs(nav, flows, positions, first_buy, as_of, site):
             "weight": round(w, 2),
             "returnPct": round(100 * (p["value"] / p["cost"] - 1), 2) if p["cost"] > 0 else None,
             "firstBought": fb_s,
+            "avgCost": round(p["avgCost"], 2) if p.get("avgCost") else None,
+            "price": round(p["price"], 2) if p.get("price") else None,
+            "currency": p.get("currency", "USD"),
         })
     invested = sum(100 * p["value"] / total for p in positions) if total else 0
     stocks = {

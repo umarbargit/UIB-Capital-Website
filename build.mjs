@@ -22,6 +22,7 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const fmtDate = (iso) => { if (!iso) return DASH; const d = new Date(String(iso).slice(0, 10) + "T00:00:00Z"); return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`; };
 const fmtMonth = (iso) => { if (!iso) return DASH; const d = new Date(String(iso).slice(0, 10) + "T00:00:00Z"); return `${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`; };
+const usd = (v, cur = "USD") => { if (v === null || v === undefined || v === "") return `<span class="muted">${DASH}</span>`; const n = Number(v); const sym = cur === "USD" ? "$" : cur === "GBP" ? "£" : cur === "EUR" ? "€" : cur + " "; return sym + n.toLocaleString("en-US", { minimumFractionDigits: n < 10 ? 2 : n < 1000 ? 2 : 0, maximumFractionDigits: n < 1000 ? 2 : 0 }); };
 const pct = (v, dp = 1, sign = true) => {
   if (v === null || v === undefined || v === "" || Number.isNaN(Number(v))) return `<span class="muted">${DASH}</span>`;
   const n = Number(v); const cls = sign ? (n > 0 ? "up" : n < 0 ? "down" : "") : "";
@@ -131,12 +132,12 @@ function stockTable() {
   const rows = stocks.positions || [];
   const link = (s) => (postFor[s] ? `<a href="/writing/${postFor[s].slug}">Thesis</a>` : `<span class="muted">${DASH}</span>`);
   const extra = [];
-  if (stocks.undisclosedNewWeight > 0) extra.push(`<tr><td>New positions <span class="muted">(shown once the thesis is out)</span></td><td class="num">${pct(stocks.undisclosedNewWeight, 1, false)}</td><td class="num"></td><td></td><td></td></tr>`);
-  if (stocks.cashWeight !== undefined) extra.push(`<tr><td>Cash</td><td class="num">${pct(stocks.cashWeight, 1, false)}</td><td class="num"></td><td></td><td></td></tr>`);
+  if (stocks.undisclosedNewWeight > 0) extra.push(`<tr><td>New positions <span class="muted">(shown once the thesis is out)</span></td><td class="num">${pct(stocks.undisclosedNewWeight, 1, false)}</td><td></td><td></td><td class="num"></td><td></td><td></td></tr>`);
+  if (stocks.cashWeight !== undefined) extra.push(`<tr><td>Cash</td><td class="num">${pct(stocks.cashWeight, 1, false)}</td><td></td><td></td><td class="num"></td><td></td><td></td></tr>`);
   return `<div class="sub"><h3>Stocks</h3><span>Interactive Brokers, ${fmtDate(asOf)}</span></div>
 <div class="table-box"><table>
-<thead><tr><th scope="col">Holding</th><th scope="col" class="num">Weight</th><th scope="col" class="num">Return</th><th scope="col" style="padding-left:24px">Since</th><th scope="col"></th></tr></thead>
-<tbody>${rows.map((p) => `<tr><td><strong>${esc(p.symbol)}</strong> <span class="muted">${esc(p.name)}</span></td><td class="num">${pct(p.weight, 1, false)}</td><td class="num">${pct(p.returnPct)}</td><td class="muted" style="padding-left:24px">${fmtMonth(p.firstBought)}</td><td>${link(p.symbol)}</td></tr>`).join("")}${extra.join("")}</tbody>
+<thead><tr><th scope="col">Holding</th><th scope="col" class="num">Weight</th><th scope="col" class="num">Avg buy</th><th scope="col" class="num">Price</th><th scope="col" class="num">Return</th><th scope="col" style="padding-left:24px">Since</th><th scope="col"></th></tr></thead>
+<tbody>${rows.map((p) => `<tr><td><strong>${esc(p.symbol)}</strong> <span class="muted">${esc(p.name)}</span></td><td class="num">${pct(p.weight, 1, false)}</td><td class="num">${usd(p.avgCost, p.currency)}</td><td class="num">${usd(p.price, p.currency)}</td><td class="num">${pct(p.returnPct)}</td><td class="muted" style="padding-left:24px">${fmtMonth(p.firstBought)}</td><td>${link(p.symbol)}</td></tr>`).join("")}${extra.join("")}</tbody>
 </table></div>`;
 }
 
@@ -146,10 +147,10 @@ function cryptoTable() {
   const since = basis.startsWith("since 20") ? `since ${fmtDate(basis.slice(6))}` : basis;
   return `<div class="sub"><h3>Crypto${sampleTag(crypto)}</h3><span>Market prices, ${fmtDate(crypto.asOf)}</span></div>
 <div class="table-box"><table>
-<thead><tr><th scope="col">Holding</th><th scope="col" class="num">Weight</th><th scope="col" class="num">Return</th><th scope="col" style="padding-left:24px">Held in</th><th scope="col"></th></tr></thead>
-<tbody>${h.map((x) => `<tr><td><strong>${esc(x.symbol)}</strong> <span class="muted">${esc(x.name)}</span></td><td class="num">${pct(x.weight, 1, false)}</td><td class="num">${pct(x.returnPct)}</td><td class="muted" style="padding-left:24px">Cold storage</td><td>${postFor[x.symbol] ? `<a href="/writing/${postFor[x.symbol].slug}">Thesis</a>` : ""}</td></tr>`).join("")}</tbody>
+<thead><tr><th scope="col">Holding</th><th scope="col" class="num">Weight</th><th scope="col" class="num">Avg buy</th><th scope="col" class="num">Price</th><th scope="col" class="num">Return</th><th scope="col" style="padding-left:24px">Held in</th><th scope="col"></th></tr></thead>
+<tbody>${h.map((x) => `<tr><td><strong>${esc(x.symbol)}</strong> <span class="muted">${esc(x.name)}</span></td><td class="num">${pct(x.weight, 1, false)}</td><td class="num">${usd(x.avgCost)}</td><td class="num">${usd(x.price)}</td><td class="num">${pct(x.returnPct)}</td><td class="muted" style="padding-left:24px">Cold storage</td><td>${postFor[x.symbol] ? `<a href="/writing/${postFor[x.symbol].slug}">Thesis</a>` : ""}</td></tr>`).join("")}</tbody>
 </table></div>
-<p class="note">Weight within the crypto part of the portfolio. Return ${esc(since)}.</p>`;
+<p class="note">Weight within the crypto part of the portfolio. Avg buy is the price on ${fmtDate(site.startDate)}, when the track record started. Return ${esc(since)}.</p>`;
 }
 
 function angelTable() {
@@ -166,23 +167,31 @@ function chart() {
   const pts = s.filter((_, i) => i % step === 0 || i === s.length - 1);
   const vals = pts.flatMap((p) => [p.port, p.bench].filter((v) => v !== undefined));
   let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * 0.1 || 1; lo -= pad; hi += pad;
-  const Wd = 1000, H = 320, L = 44, B = 26;
+  const Wd = 1000, H = 320, L = 64, B = 26;
   const x = (i) => L + (i / (pts.length - 1)) * (Wd - L - 4);
   const y = (v) => 6 + (1 - (v - lo) / (hi - lo)) * (H - B - 6);
   const line = (k) => pts.map((p, i) => (p[k] === undefined ? null : `${x(i).toFixed(1)},${y(p[k]).toFixed(1)}`)).filter(Boolean).join(" ");
   const ticks = [0, 0.25, 0.5, 0.75, 1].map((f) => lo + f * (hi - lo));
   const last = pts[pts.length - 1];
   const font = 'font-size="12" fill="var(--muted)" font-family="JetBrains Mono, monospace"';
-  return `<div class="chart">
+  const M = (v) => "$" + Math.round(v * 10000).toLocaleString("en-US");
+  const K = (v) => { const n = v * 10000; return n >= 1e6 ? "$" + (n / 1e6).toFixed(n >= 1e7 ? 1 : 2) + "M" : "$" + Math.round(n / 1000) + "K"; };
+  const diff = last.bench !== undefined ? (last.port - last.bench) * 10000 : null;
+  return `<div class="grow">
+<p class="grow-k">$1,000,000 invested on ${fmtDate(pts[0].date)} would now be worth</p>
+<div class="grow-row"><div><span class="grow-v">${M(last.port)}</span><span class="grow-l"><i style="background:var(--c1)"></i>${esc(site.name)}</span></div>
+<div><span class="grow-v muted-v">${last.bench !== undefined ? M(last.bench) : DASH}</span><span class="grow-l"><i style="background:var(--bench)"></i>${bench}</span></div>
+${diff !== null ? `<div><span class="grow-v ${diff >= 0 ? "up" : "down"}">${diff >= 0 ? "+" : "-"}$${Math.abs(Math.round(diff)).toLocaleString("en-US")}</span><span class="grow-l">Difference</span></div>` : ""}</div></div>
+<div class="chart">
 <div class="legend"><span><i style="background:var(--c1)"></i>${esc(site.name)}</span><span><i style="background:var(--bench)"></i>${bench}</span></div>
-<svg viewBox="0 0 ${Wd} ${H}" role="img" aria-label="Growth of 100 since ${fmtDate(pts[0].date)}: ${esc(site.name)} ${last.port.toFixed(1)}, ${bench} ${last.bench ? last.bench.toFixed(1) : "n/a"}">
-${ticks.map((t) => `<line x1="${L}" x2="${Wd}" y1="${y(t).toFixed(1)}" y2="${y(t).toFixed(1)}" stroke="var(--line)" stroke-width="1"/><text x="${L - 10}" y="${(y(t) + 4).toFixed(1)}" text-anchor="end" ${font}>${t.toFixed(0)}</text>`).join("")}
+<svg viewBox="0 0 ${Wd} ${H}" role="img" aria-label="Growth of $1,000,000 since ${fmtDate(pts[0].date)}: ${esc(site.name)} ${M(last.port)}, ${bench} ${last.bench ? M(last.bench) : "n/a"}">
+${ticks.map((t) => `<line x1="${L}" x2="${Wd}" y1="${y(t).toFixed(1)}" y2="${y(t).toFixed(1)}" stroke="var(--line)" stroke-width="1"/><text x="${L - 10}" y="${(y(t) + 4).toFixed(1)}" text-anchor="end" ${font}>${K(t)}</text>`).join("")}
 <text x="${L}" y="${H - 4}" ${font}>${fmtDate(pts[0].date)}</text>
 <text x="${Wd}" y="${H - 4}" text-anchor="end" ${font}>${fmtDate(last.date)}</text>
 <polyline points="${line("bench")}" fill="none" stroke="var(--bench)" stroke-width="1.5"/>
 <polyline points="${line("port")}" fill="none" stroke="var(--c1)" stroke-width="2.25"/>
 </svg>
-<p class="note">Growth of 100 from the start. ${W.stocks}% stocks and ${W.crypto}% crypto, time-weighted and after costs. Money added or taken out isn't counted as a gain or loss.</p></div>`;
+<p class="note">Growth of a hypothetical $1,000,000 from the start, for illustration only. ${W.stocks}% stocks and ${W.crypto}% crypto, time-weighted and after costs. Money added or taken out isn't counted as a gain or loss.</p></div>`;
 }
 
 function sleeves() {

@@ -169,3 +169,14 @@ a:hover { color: var(--accent-ink); }
 .consent-btns { display: flex; gap: 8px; }
 .consent .btn { min-height: 40px; padding: 0 16px; font-size: 14px; border: 1px solid #fff; cursor: pointer; font-family: inherit; color: #2C7DBF; }
 .consent .btn-ghost { color: #fff; }
+
+/* growth of $1M */
+.grow { margin: 8px 0 20px; }
+.grow-k { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+.grow-row { display: flex; flex-wrap: wrap; gap: 16px 48px; }
+.grow-row > div { display: flex; flex-direction: column; gap: 4px; }
+.grow-v { font-family: var(--mono); font-size: clamp(22px, 4vw, 30px); color: var(--head); font-weight: 600; }
+.grow-v.muted-v { color: var(--muted); }
+.grow-v.up { color: var(--up); } .grow-v.down { color: var(--down); }
+.grow-l { font-size: 13px; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+.grow-l i { width: 14px; height: 3px; display: inline-block; }
