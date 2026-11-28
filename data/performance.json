@@ -1,6 +1,6 @@
 {
-  "asOf": "2026-11-27",
-  "stocksAsOf": "2026-11-26",
+  "asOf": "2026-11-28",
+  "stocksAsOf": "2026-11-27",
   "method": "Combined: 70% stocks, 30% crypto (fixed weights). Time-weighted, after costs; deposits and withdrawals excluded",
   "series": [
     {
@@ -26,27 +26,34 @@
     },
     {
       "date": "2026-11-27",
-      "stocks": 100.0036,
+      "stocks": 100.0079,
       "bench": 101.3272,
-      "crypto": 101.4418,
-      "port": 100.434
+      "crypto": 101.1319,
+      "port": 100.3449
+    },
+    {
+      "date": "2026-11-28",
+      "stocks": 100.0079,
+      "bench": 101.3272,
+      "crypto": 100.0186,
+      "port": 100.0135
     }
   ],
   "stats": {
     "portfolio": {
-      "sinceInception": 0.43,
-      "ytd": 0.43,
-      "maxDrawdown": 0.0
+      "sinceInception": 0.01,
+      "ytd": 0.01,
+      "maxDrawdown": -0.38
     },
     "stocks": {
-      "sinceInception": 0.0,
-      "ytd": 0.0,
+      "sinceInception": 0.01,
+      "ytd": 0.01,
       "maxDrawdown": -0.0
     },
     "crypto": {
-      "sinceInception": 1.44,
-      "ytd": 1.44,
-      "maxDrawdown": 0.0
+      "sinceInception": 0.02,
+      "ytd": 0.02,
+      "maxDrawdown": -1.27
     },
     "benchmark": {
       "sinceInception": 1.33,
@@ -57,7 +64,7 @@
   "monthly": {
     "portfolio": {
       "2026": {
-        "11": 0.43
+        "11": 0.01
       }
     },
     "benchmark": {
@@ -68,7 +75,7 @@
   },
   "yearly": {
     "portfolio": {
-      "2026": 0.43
+      "2026": 0.01
     },
     "benchmark": {
       "2026": 1.33
