@@ -35,15 +35,15 @@
       "date": "2026-11-28",
       "stocks": 100.0079,
       "bench": 101.3272,
-      "crypto": 100.0186,
-      "port": 100.0135
+      "crypto": 99.7332,
+      "port": 99.9285
     }
   ],
   "stats": {
     "portfolio": {
-      "sinceInception": 0.01,
-      "ytd": 0.01,
-      "maxDrawdown": -0.38
+      "sinceInception": -0.07,
+      "ytd": -0.07,
+      "maxDrawdown": -0.46
     },
     "stocks": {
       "sinceInception": 0.01,
@@ -51,9 +51,9 @@
       "maxDrawdown": -0.0
     },
     "crypto": {
-      "sinceInception": 0.02,
-      "ytd": 0.02,
-      "maxDrawdown": -1.27
+      "sinceInception": -0.27,
+      "ytd": -0.27,
+      "maxDrawdown": -1.55
     },
     "benchmark": {
       "sinceInception": 1.33,
@@ -64,7 +64,7 @@
   "monthly": {
     "portfolio": {
       "2026": {
-        "11": 0.01
+        "11": -0.07
       }
     },
     "benchmark": {
@@ -75,7 +75,7 @@
   },
   "yearly": {
     "portfolio": {
-      "2026": 0.01
+      "2026": -0.07
     },
     "benchmark": {
       "2026": 1.33

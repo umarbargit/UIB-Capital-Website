@@ -9,9 +9,9 @@
       "startWeight": 43.9,
       "weight": 43.1,
       "avgCost": 1677.69,
-      "returnPct": -1.73,
+      "returnPct": -2.03,
       "returnBasis": "since bought",
-      "price": 1648.72
+      "price": 1643.66
     },
     {
       "symbol": "SOL",
@@ -20,9 +20,9 @@
       "startWeight": 56.1,
       "weight": 56.9,
       "avgCost": 69.64,
-      "returnPct": 1.38,
+      "returnPct": 1.11,
       "returnBasis": "since bought",
-      "price": 70.6
+      "price": 70.41
     }
   ]
 }
